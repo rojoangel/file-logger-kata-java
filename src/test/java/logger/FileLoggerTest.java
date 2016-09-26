@@ -8,6 +8,9 @@ import org.junit.Test;
 
 public class FileLoggerTest {
 
+    public static final String MESSAGE = "this is a log message";
+    public static final String CURRENT_DATE = "20160916";
+
     private Mockery context;
     private FileSystemHandler fileSystemHandler;
     private DateTimeProvider dateTimeProvider;
@@ -21,43 +24,39 @@ public class FileLoggerTest {
 
     @Test
     public void testLogAppendsToTheEndOfAnExistingFile() throws Exception {
-        String message = "this is a log message";
-        String currentDate = "20160916";
-        String fileName = "log" + currentDate + ".txt";
+        String fileName = "log" + CURRENT_DATE + ".txt";
 
         context.checking(new Expectations() {{
             oneOf(dateTimeProvider).current();
-            will(returnValue(currentDate));
+            will(returnValue(CURRENT_DATE));
 
             oneOf(fileSystemHandler).exists(fileName);
             will(returnValue(true));
 
-            oneOf(fileSystemHandler).append(message, fileName);
+            oneOf(fileSystemHandler).append(MESSAGE, fileName);
         }});
 
         FileLogger fileLogger = new FileLogger(fileSystemHandler, dateTimeProvider);
-        fileLogger.log(message);
+        fileLogger.log(MESSAGE);
     }
 
     @Test
     public void testLogCreatesAndAppendsIfFileDoesNotExist() throws Exception {
-        String message = "this is a log message";
-        String currentDate = "20160916";
-        String fileName = "log" + currentDate + ".txt";
+        String fileName = "log" + CURRENT_DATE + ".txt";
 
         context.checking(new Expectations() {{
             oneOf(dateTimeProvider).current();
-            will(returnValue(currentDate));
+            will(returnValue(CURRENT_DATE));
 
             oneOf(fileSystemHandler).exists(fileName);
             will(returnValue(false));
             oneOf(fileSystemHandler).create(fileName);
 
-            oneOf(fileSystemHandler).append(message, fileName);
+            oneOf(fileSystemHandler).append(MESSAGE, fileName);
         }});
 
         FileLogger fileLogger = new FileLogger(fileSystemHandler, dateTimeProvider);
-        fileLogger.log(message);
+        fileLogger.log(MESSAGE);
     }
 
     @After
