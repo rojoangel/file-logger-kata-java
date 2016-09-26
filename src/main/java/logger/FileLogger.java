@@ -10,6 +10,9 @@ public class FileLogger {
     }
 
     public void log(String message) {
-        this.fileSystemHandler.append(message, FILE_NAME);
+        if (!fileSystemHandler.exists(FILE_NAME)) {
+            fileSystemHandler.create(FILE_NAME);
+        }
+        fileSystemHandler.append(message, FILE_NAME);
     }
 }

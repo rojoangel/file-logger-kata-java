@@ -22,6 +22,25 @@ public class FileLoggerTest {
         String message = "this is a log message";
         String fileName = "log.txt";
         context.checking(new Expectations() {{
+            oneOf(fileSystemHandler).exists(fileName);
+            will(returnValue(true));
+
+            oneOf(fileSystemHandler).append(message, fileName);
+        }});
+
+        FileLogger fileLogger = new FileLogger(fileSystemHandler);
+        fileLogger.log(message);
+    }
+
+    @Test
+    public void testLogCreatesFileIfItDoesNotExist() throws Exception {
+        String message = "this is a log message";
+        String fileName = "log.txt";
+        context.checking(new Expectations() {{
+            oneOf(fileSystemHandler).exists(fileName);
+            will(returnValue(false));
+
+            oneOf(fileSystemHandler).create(fileName);
             oneOf(fileSystemHandler).append(message, fileName);
         }});
 
