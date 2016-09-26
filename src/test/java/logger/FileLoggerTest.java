@@ -9,22 +9,23 @@ import org.junit.Test;
 public class FileLoggerTest {
 
     private Mockery context;
-    private LogFileHandler logFileHandler;
+    private FileSystemHandler fileSystemHandler;
 
     @Before
     public void setUp() throws Exception {
         context = new Mockery();
-        logFileHandler = context.mock(LogFileHandler.class);
+        fileSystemHandler = context.mock(FileSystemHandler.class);
     }
 
     @Test
     public void testLogAppendsToTheEndOfLogFile() throws Exception {
         String message = "this is a log message";
+        String fileName = "log.txt";
         context.checking(new Expectations() {{
-            oneOf(logFileHandler).append(message);
+            oneOf(fileSystemHandler).append(message, fileName);
         }});
 
-        FileLogger fileLogger = new FileLogger(logFileHandler);
+        FileLogger fileLogger = new FileLogger(fileSystemHandler);
         fileLogger.log(message);
     }
 
