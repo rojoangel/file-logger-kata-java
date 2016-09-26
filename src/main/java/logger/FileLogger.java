@@ -2,7 +2,6 @@ package logger;
 
 public class FileLogger {
 
-    public static final String FILE_NAME = "log.txt";
     private final DateTimeProvider dateTimeProvider;
     private FileSystemHandler fileSystemHandler;
 
@@ -12,11 +11,15 @@ public class FileLogger {
     }
 
     public void log(String message) {
-        String currentDateTime = dateTimeProvider.current();
-        String fileName = "log" + currentDateTime + ".txt";
+        String fileName = getFileName();
         if (!fileSystemHandler.exists(fileName)) {
             fileSystemHandler.create(fileName);
         }
         fileSystemHandler.append(message, fileName);
+    }
+
+    private String getFileName() {
+        String currentDateTime = dateTimeProvider.current();
+        return "log" + currentDateTime + ".txt";
     }
 }
